@@ -1,0 +1,40 @@
+ALGORITHM SolveDotsDP(n)
+    // Input: n, the size of the n x n lattice (n >= 3)
+    // Output: A list of vertices representing the continuous path
+
+    // 1. Handle invalid inputs
+    if n < 3 then
+        return "Invalid input, n must be > 2"
+
+    // 2. Initialize DP Table (or Array) to store paths for each grid size
+    // path_table[i] will store the sequence of vertices for an i x i grid
+    Let path_table be an array of size (n + 1)
+    Let current_x = 0, current_y = n - 1
+    Let dir = 0  // 0: Right, 1: Down, 2: Left, 3: Up
+
+    // 3. Define the Base Case (n = 3)
+    // Note: In a real implementation, the base case coordinates must be 
+    // rotated to match the entry direction (dir).
+    path_table[3] = GetClassic3x3Solution(current_x, current_y, dir)
+
+    // 4. Fill the DP Table iteratively (Bottom-Up DP is possible, 
+    // but Top-Down reduction is much more intuitive for spatial coordinates)
+    Let path = []
+    
+    WHILE n > 3 DO
+        // Sweep the outer boundary (takes 2 lines)
+        Point 1: Move forward in 'dir' by (n - 1) units
+        Point 2: Turn 90 degrees clockwise, move forward by (n - 1) units
+        
+        Append Point 1 and Point 2 to path
+        
+        // Update variables for the subproblem
+        dir = (dir + 2) % 4       // Update heading
+        n = n - 1                 // Reduce state to (n-1)
+        
+    END WHILE
+
+    // 5. Append the base case to the reduced path
+    Append path_table[3] to path
+
+    RETURN path
